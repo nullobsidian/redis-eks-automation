@@ -1,0 +1,22 @@
+- name: Create Redis ConfigMap
+  kubernetes.core.k8s:
+    namespace: "{{ namespace_name }}"
+    kind: ConfigMap
+    name: "{{ configmap_name }}"
+    state: present
+    definition:
+      data:
+        redis.conf: |
+          bind 0.0.0.0
+          protected-mode yes
+          port 6379
+          tcp-backlog 511
+          timeout 0
+          tcp-keepalive 300
+          daemonize no
+          supervised no
+          pidfile /var/run/redis.pid
+          loglevel notice
+          logfile ""
+          databases 16
+          always-show-logo no

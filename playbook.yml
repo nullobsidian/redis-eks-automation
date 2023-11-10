@@ -1,0 +1,25 @@
+- hosts: all
+  gather_facts: false
+  vars:
+    namespace_name: "redis"
+    configmap_name: "redis-configmap"
+    secret_name: "redis-secret"
+  roles:
+    - namespace
+    - role: configmap
+      vars:
+        namespace_name: "redis"
+        configmap_data:
+          maxmemory: "2mb"
+          maxmemory_policy: "allkeys-lru"
+    - secrets
+    - role: stateful_app
+      vars:
+        statefulset_name: "redis-statefulset"
+        app_service_name: "redis-service"
+        app_label: "database"
+        container_name: "redis-db"
+        container_image: "redis:7.2.3"
+        volume_name: "data"
+        replica_count: 1
+        storage_size: "10Gi"
